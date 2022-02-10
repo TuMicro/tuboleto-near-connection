@@ -22,14 +22,25 @@ $grayEra01    : #666666;
   font-family: 'Elemental End italic';
 }
 
+@font-face {
+  font-family: 'NotoSans-Regular';
+  src        : url(fonts/NotoSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Bold';
+  src        : url(fonts/NotoSans-Bold.ttf);
+}
+
+
 @mixin font-hpe {
-  font-family: 'Elemental End', 'Roboto', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+  font-family: 'NotoSans-Regular', 'Roboto', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 }
 
 @mixin font-hpe-second {
-  font-family: 'Montserrat', 'Roboto', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+  font-family: 'NotoSans-Regular', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 }
