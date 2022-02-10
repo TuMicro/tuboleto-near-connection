@@ -1,0 +1,1 @@
+export const CONNECTION_ERROR_MESSAGE = "Sucedió un error, por favor revisa tu conexión a internet 📶🌍";

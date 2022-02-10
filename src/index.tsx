@@ -1,0 +1,33 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.scss';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { isLocalhost, isProductionWebsite } from './util/DevEnvUtil';
+import * as Sentry from "@sentry/react";
+import { Integrations } from '@sentry/tracing';
+
+Sentry.init({
+  dsn: "",
+  integrations: [new Integrations.BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: (isLocalhost ? 1.0 : 1.0),
+
+  enabled: isProductionWebsite,
+});
+
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
