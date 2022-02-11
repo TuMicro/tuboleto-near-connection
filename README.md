@@ -1,77 +1,41 @@
+# About this repository
+
+This repository contains the source code for the connector and top-up website for the TuBoleto app using your NEAR wallet.
+
+The TuBoleto app Near related UI and modifications built during the hackathon are here: https://github.com/TuMicro/tuboleto-near-ui. That repository includes logic for generating links and making use of the website in this repository and also for using the Aurora connector.
+
+The Aurora connector (top-up website) is here: https://github.com/TuMicro/tuboleto-aurora-connection
+
+# Development
+
 Using node v16.13.2
-
-To generate typescript types for json responses:
-https://jvilk.com/MakeTypes/
-
-Remember:
-* Bootstrap5 changes left and right for start and end (ie: ml => ms, pr => pe)
-* If you run into scss related errors you can try changing the scss files from CRLF to LF
-
-# Favicon and icons generator:
-
-Use this, it should have all the required icons (including the apple one):
-https://favicon.io/favicon-converter/
-
-# Deploy with:
-
-You may separate both commands, but next one works in cmd in windows:
-
-npm run build && firebase deploy && time /t
-
-# For fixing my bad ways of using the state:
-
-Search:
-
-\{.*\n.*\.\.\.state,((\n[^}]*)*)\}
-
-Replace with:
-
-ps => ({...ps,$1})
-
-
-# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Run `npm start` to start developing.
 
-In the project directory, you can run:
+You should see the website when opening [http://localhost:3000](http://localhost:3000) with your browser.
 
-### `npm start`
+The page will reload if you make edits.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+## Notes to remember:
+* Bootstrap5 changes left and right for start and end (ie: ml => ms, pr => pe)
+* To generate typescript types for json responses:
+https://jvilk.com/MakeTypes/
+* Use this to generate the favicon and icons, it should have all the required icons (including the apple one):
+https://favicon.io/favicon-converter/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## About some common issues:
 
-### `npm run build`
+* If you run into scss related errors you can try changing the scss files from CRLF to LF
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Deploy with:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+If you have write access to the Google Project you will see it deployed in [`here`](https://tuboleto-near.web.app/) 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+npm run build && firebase deploy && time /t
+```
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
