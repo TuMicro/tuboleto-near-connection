@@ -141,7 +141,8 @@ export class Main extends Component<IProps, IState> {
           conectionDependantContent = (
             <>
               <div>
-                <button onClick={() => this.sendNear(amountStr)}>Reintentar el envío de {amountStr} NEAR por recarga a TuBoleto</button>
+                <button onClick={
+                  () => this.sendNear(amountStr)}>🔁 Retry sending {amountStr} NEAR</button>
               </div>
               <p>
                 <span style={{
@@ -151,7 +152,7 @@ export class Main extends Component<IProps, IState> {
                 <br />
                 <span style={{
                   fontSize: '14px',
-                }}>🟢 Billetera conectada</span>
+                }}>🟢 Wallet Connected</span>
                 <br />
                 <span style={{
                   fontSize: '12px',
@@ -159,18 +160,18 @@ export class Main extends Component<IProps, IState> {
               </p>
 
 
-              <button onClick={() => this.disconnect()}>Desconectar</button>
+              <button onClick={() => this.disconnect()}>Disconnect</button>
             </>
           )
         } else {
           conectionDependantContent = (<>
             <span style={{
               fontSize: '16px',
-            }}>Recarga exitosa!! 🥳</span>
+            }}>Success!! 🥳</span>
             <br />
             <span style={{
               fontSize: '14px',
-            }}>Puedes regresar a TuBoleto a ver tu saldo actualizado</span>
+            }}>You can go back to TuBoleto now</span>
             <br />
             {isMobile() ?
               // <button onClick={() => this.openTuBoleto()}>Regresar a TuBoleto</button>
@@ -182,7 +183,7 @@ export class Main extends Component<IProps, IState> {
         }
       } else {
         conectionDependantContent = (<div>
-          <button onClick={() => this.connect(this.state.walletConnection!)}>Conectar Billetera</button>
+          <button onClick={() => this.connect(this.state.walletConnection!)}>Connect Wallet</button>
         </div>)
       }
     } else {
@@ -215,7 +216,7 @@ export class Main extends Component<IProps, IState> {
           {
             (
               this.state.trLoading || this.state.walletConnection == null ?
-                "Cargando... ✌️" :
+                "Loading... ✌️" :
                 <>
                   {conectionDependantContent}
                   <br />
@@ -224,7 +225,7 @@ export class Main extends Component<IProps, IState> {
           }
           <p style={{
             fontSize: '8px',
-          }}>TuBoleto - Near connector v0.0.7</p>
+          }}>TuBoleto - Near connector v0.0.9</p>
         </div>
       </div>
     )
