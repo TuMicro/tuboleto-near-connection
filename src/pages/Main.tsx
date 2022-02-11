@@ -16,6 +16,7 @@ interface IProps {
 
 interface IState {
   trLoading: boolean;
+  
   near?: nearAPI.Near;
   walletConnection?: nearAPI.WalletConnection;
   pingResponse?: any;
@@ -49,12 +50,14 @@ export class Main extends Component<IProps, IState> {
   }
 
   sendNear = async (amountStr: string) => {
+    this.setState({ trLoading: true });
     const yoctoNEAR = parseUnits(amountStr, 24);
     const result = await this.state.walletConnection?.account().sendMoney(
       "tuboleto.near", // receiver account
       yoctoNEAR.toString(), // amount in yoctoNEAR
     );
     console.log(result);
+    this.setState({ trLoading: false });
   }
 
   connect = async (walletConnection: nearAPI.WalletConnection) => {
@@ -221,7 +224,7 @@ export class Main extends Component<IProps, IState> {
           }
           <p style={{
             fontSize: '8px',
-          }}>TuBoleto - Near connector v0.0.6</p>
+          }}>TuBoleto - Near connector v0.0.7</p>
         </div>
       </div>
     )
