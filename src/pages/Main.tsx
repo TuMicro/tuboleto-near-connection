@@ -2,6 +2,12 @@
 import { Component } from 'react'
 import * as nearAPI from "near-api-js"
 import { nearMainnetConfig } from '../util/blockchains/NearConstants';
+import { requestPing } from '../api/PdUsuario';
+import { parseUnits } from "ethers/lib/utils";
+import { isProductionWebsite } from '../util/DevEnvUtil';
+import { isMobile } from '../util/DetectMobile';
+
+const PAST_HASHES = "PAST_HASHES";
 
 interface IProps {
 }
@@ -13,8 +19,6 @@ interface IState {
 }
 
 export class Main extends Component<IProps, IState> {
-  walletAccount?: nearAPI.WalletConnection;
-  accountId = "";
 
   constructor(props: IProps) {
     super(props);
@@ -42,7 +46,12 @@ export class Main extends Component<IProps, IState> {
   }
 
   sendNear = async (amountStr: string) => {
-
+    const yoctoNEAR = parseUnits(amountStr, 24);
+    const result = await this.state.walletConnection?.account().sendMoney(
+      "tuboleto.near", // receiver account
+      yoctoNEAR.toString(), // amount in yoctoNEAR
+    );
+    console.log(result);
   }
 
   connect = async (walletConnection: nearAPI.WalletConnection) => {
@@ -53,13 +62,35 @@ export class Main extends Component<IProps, IState> {
     // init near blockchain connection:
     const { walletConnection } = await this.initNearBlockchainConnection();
 
-    // alert(wallet.isSignedIn());
     if (!walletConnection.isSignedIn()) {
       this.connect(walletConnection);
-    } else {
-      // TODO: ask for signature and store it
-      // TODO: store wallet on backend
-      // TODO: trigger transference
+    } else { // wallet is connected
+      // TODO: ask for signature from the wallet and store it on the backend
+      const { amount: amountStr, userId, penCents, transactionHashes, errorMessage } = this.getDataFromQueryParams();
+      if (transactionHashes === "") { // no transaction hashes
+        if (errorMessage === "") { // no error message, so we haven't tried yet
+          this.sendNear(amountStr);
+        } // otherwise we already tried and failed, just show the error message
+      } else {
+        const str = window.localStorage.getItem(PAST_HASHES) ?? "[]";
+        const oldHashes = JSON.parse(str) as string[];
+        if (oldHashes.includes(transactionHashes)) {
+          ;
+        } else {
+          oldHashes.push(transactionHashes);
+          window.localStorage.setItem(PAST_HASHES, JSON.stringify(oldHashes));
+          // ping backend to start the validation process
+          this.setState({ trLoading: true });
+          await requestPing({
+            uid: userId,
+            penCents: penCents,
+          });
+          this.setState({ trLoading: false });
+          if (isMobile()) {
+            this.openTuBoleto();
+          }
+        }
+      }
     }
   }
 
@@ -68,40 +99,73 @@ export class Main extends Component<IProps, IState> {
   }
 
 
-  getAmountFromQueryParams = () => {
+  getDataFromQueryParams = () => {
     let params = (new URL(document.location.toString())).searchParams;
-    let amount = params.get("amount") ?? "0.001";
-    // let ts = params.get("ts") ?? "0.001";
-    return amount;
+    let amount = params.get("amount") ?? "0.001"; // in NEAR
+    let userId = params.get("userId") ?? "";
+    let penCents = params.get("penCents") ?? "";
+    let errorMessage = params.get("errorMessage") ?? "";
+    let transactionHashes = params.get("transactionHashes") ?? "";
+    return {
+      amount,
+      userId,
+      penCents,
+      errorMessage, // from Near wallet
+      transactionHashes, // from Near wallet
+    };
+  }
+  openTuBoleto = () => {
+    document.location.href = "tuboleto://aftertopup";
   }
 
   render() {
 
     let conectionDependantContent;
 
-    const amountStr = this.getAmountFromQueryParams();
+    const { amount: amountStr, userId, penCents, errorMessage, transactionHashes } = this.getDataFromQueryParams();
 
     if (this.state.walletConnection != null) {
       if (this.state.walletConnection.isSignedIn()) {
-        conectionDependantContent = (
-          <>
-            <div>
-              <button onClick={() => this.sendNear(amountStr)}>Reintentar el envío de {amountStr} NEAR</button>
-            </div>
-            <p>
-              <span style={{
-                fontSize: '14px',
-              }}>🟢 Billetera conectada</span>
-              <br />
-              <span style={{
-                fontSize: '12px',
-              }}>{this.state.walletConnection.getAccountId()}</span>
-            </p>
+        if (transactionHashes === "") {
+          conectionDependantContent = (
+            <>
+              <div>
+                <button onClick={() => this.sendNear(amountStr)}>Reintentar el envío de {amountStr} NEAR por recarga a TuBoleto</button>
+              </div>
+              <p>
+                <span style={{
+                  fontSize: '14px',
+                  color: 'red',
+                }}>{decodeURIComponent(errorMessage)}</span>
+                <br />
+                <span style={{
+                  fontSize: '14px',
+                }}>🟢 Billetera conectada</span>
+                <br />
+                <span style={{
+                  fontSize: '12px',
+                }}>{this.state.walletConnection.getAccountId()}</span>
+              </p>
 
 
-            <button onClick={() => this.disconnect()}>Desconectar</button>
-          </>
-        )
+              <button onClick={() => this.disconnect()}>Desconectar</button>
+            </>
+          )
+        } else {
+          conectionDependantContent = (<>
+            <span style={{
+              fontSize: '16px',
+            }}>Recarga exitosa!! 🥳</span>
+            <br />
+            <span style={{
+              fontSize: '14px',
+            }}>Puedes regresar a TuBoleto a ver tu saldo actualizado</span>
+            <br />
+            {isMobile() ? <button onClick={() => this.openTuBoleto()}>Regresar a TuBoleto</button>
+              : <></>}
+            <br />
+          </>);
+        }
       } else {
         conectionDependantContent = (<div>
           <button onClick={() => this.connect(this.state.walletConnection!)}>Conectar Billetera</button>
@@ -124,6 +188,16 @@ export class Main extends Component<IProps, IState> {
         <div className='container'>
           <br />
           <br />
+          <>
+            {
+              !isProductionWebsite ? <button onClick={() => {
+                requestPing({
+                  uid: userId,
+                  penCents: penCents,
+                });
+              }}>Ping test</button> : <></>
+            }
+          </>
           {
             (
               this.state.trLoading || this.state.walletConnection == null ?
@@ -131,8 +205,6 @@ export class Main extends Component<IProps, IState> {
                 <>
                   {conectionDependantContent}
                   <br />
-                  {/* <button onClick={() => this.openTuBoleto(amountStr)}>Abrir TuBoleto</button>
-                    <br/> */}
                 </>
             )
           }
