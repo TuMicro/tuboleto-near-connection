@@ -142,7 +142,7 @@ export class Main extends Component<IProps, IState> {
             <>
               <div>
                 <button onClick={
-                  () => this.sendNear(amountStr)}>🔁 Retry sending {amountStr} NEAR</button>
+                  () => this.sendNear(amountStr)}>🔁 Retry sending {amountStr} NEAR to top up TuBoleto</button>
               </div>
               <p>
                 <span style={{
@@ -167,11 +167,11 @@ export class Main extends Component<IProps, IState> {
           conectionDependantContent = (<>
             <span style={{
               fontSize: '16px',
-            }}>Success!! 🥳</span>
+            }}>Successfully topped up! 🥳</span>
             <br />
             <span style={{
               fontSize: '14px',
-            }}>You can go back to TuBoleto now</span>
+            }}>You can now go back to TuBoleto and check out your new balance</span>
             <br />
             {isMobile() ?
               // <button onClick={() => this.openTuBoleto()}>Regresar a TuBoleto</button>
