@@ -8,6 +8,8 @@ import { isProductionWebsite } from '../util/DevEnvUtil';
 import { isMobile } from '../util/DetectMobile';
 
 const PAST_HASHES = "PAST_HASHES";
+const TUBOLETO_URI = "tuboleto:";
+// const TUBOLETO_URI = "https://tuboleto.pe/app";
 
 interface IProps {
 }
@@ -115,7 +117,7 @@ export class Main extends Component<IProps, IState> {
     };
   }
   openTuBoleto = () => {
-    document.location.href = "tuboleto://aftertopup";
+    document.location.href = TUBOLETO_URI;
   }
 
   render() {
@@ -161,7 +163,10 @@ export class Main extends Component<IProps, IState> {
               fontSize: '14px',
             }}>Puedes regresar a TuBoleto a ver tu saldo actualizado</span>
             <br />
-            {isMobile() ? <button onClick={() => this.openTuBoleto()}>Regresar a TuBoleto</button>
+            {isMobile() ?
+              // <button onClick={() => this.openTuBoleto()}>Regresar a TuBoleto</button>
+              // <a href={TUBOLETO_URI}>Regresar a TuBoleto</a>
+              <></>
               : <></>}
             <br />
           </>);
@@ -210,7 +215,7 @@ export class Main extends Component<IProps, IState> {
           }
           <p style={{
             fontSize: '8px',
-          }}>TuBoleto - Near connector v0.0.1</p>
+          }}>TuBoleto - Near connector v0.0.5</p>
         </div>
       </div>
     )
