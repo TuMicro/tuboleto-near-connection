@@ -15,9 +15,10 @@ interface IProps {
 }
 
 interface IState {
-  trLoading: boolean,
+  trLoading: boolean;
   near?: nearAPI.Near;
   walletConnection?: nearAPI.WalletConnection;
+  pingResponse?: any;
 }
 
 export class Main extends Component<IProps, IState> {
@@ -79,17 +80,22 @@ export class Main extends Component<IProps, IState> {
         if (oldHashes.includes(transactionHashes)) {
           ;
         } else {
-          oldHashes.push(transactionHashes);
-          window.localStorage.setItem(PAST_HASHES, JSON.stringify(oldHashes));
           // ping backend to start the validation process
           this.setState({ trLoading: true });
-          await requestPing({
+          const res = await requestPing({
             uid: userId,
             penCents: penCents,
           });
-          this.setState({ trLoading: false });
-          if (isMobile()) {
-            this.openTuBoleto();
+          this.setState({ trLoading: false, pingResponse: res });
+          console.log(res);
+          if (res.msg === "OK") {
+            oldHashes.push(transactionHashes);
+            window.localStorage.setItem(PAST_HASHES, JSON.stringify(oldHashes));
+            if (isMobile()) {
+              this.openTuBoleto();
+            }
+          } else {
+            alert(res.msg);
           }
         }
       }
@@ -215,7 +221,7 @@ export class Main extends Component<IProps, IState> {
           }
           <p style={{
             fontSize: '8px',
-          }}>TuBoleto - Near connector v0.0.5</p>
+          }}>TuBoleto - Near connector v0.0.6</p>
         </div>
       </div>
     )
