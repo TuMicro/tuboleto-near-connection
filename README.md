@@ -2,6 +2,8 @@
 
 This repository contains the source code for the connector and top-up website for the TuBoleto app using your NEAR wallet.
 
+You can test it out by installing the [apk uploaded](./332.apk) into this repo.
+
 The TuBoleto app Near related UI and modifications built during the hackathon are here: https://github.com/TuMicro/tuboleto-near-ui. That repository includes logic for generating links and making use of the website in this repository and also for using the Aurora connector.
 
 The Aurora connector (top-up website) is here: https://github.com/TuMicro/tuboleto-aurora-connection
